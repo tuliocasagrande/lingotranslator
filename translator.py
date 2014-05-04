@@ -15,7 +15,7 @@ englishMode = False
 lingoMode = False
 keepMode = False
 
-def translate(fileName, mode):
+def init(mode):
   global lingoDict, englishDict, englishMode, lingoMode, keepMode
 
   englishMode = mode[0] == 'Y'
@@ -23,11 +23,19 @@ def translate(fileName, mode):
   keepMode = mode[2] == 'Y'
 
   try:
-    input = open(fileName)
-
     module_path = os.path.dirname(__file__)
     lingoDict = readDictFile(open(os.path.join(module_path, 'dictionaries', 'lingoDict.txt')))
     englishDict = readDictFile(open(os.path.join(module_path, 'dictionaries', 'englishDict.txt')))
+
+  except IOError as e:
+    print e
+    print 'This file really exists?'
+
+def translate_file(fileName, mode):
+  global lingoDict, englishDict, englishMode, lingoMode, keepMode
+
+  try:
+    input = open(fileName)
 
     file_path, file_name = os.path.split(fileName)
     output = open(os.path.join(file_path, 'translated_{0}_{1}'.format(mode, file_name)), 'w')
@@ -36,7 +44,7 @@ def translate(fileName, mode):
     for line in input:
 
       # Writing the translated line to the output file
-      output.write(parser(line))
+      output.write(translate(line))
 
   except IOError as e:
     print e
@@ -44,7 +52,7 @@ def translate(fileName, mode):
     sys.exit()
 
 
-def parser(line):
+def translate(line):
 
   # To ensure that will tokenize the last word of the line
   line = line + ' '

@@ -43,5 +43,6 @@ else:
 	mode = fixMode(sys.argv[1])
 
 	print "Translating file '{0}' with mode '{1}'.".format(sys.argv[2], mode)
-	translator.translate(sys.argv[2], mode)
+	translator.init(mode)
+	translator.translate_file(sys.argv[2], mode)
 	print 'Done!'
